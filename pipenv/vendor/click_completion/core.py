@@ -309,7 +309,7 @@ def get_code(shell=None, prog_name=None, env_name=None, extra_env=None):
     prog_name = prog_name or click.get_current_context().find_root().info_name
     env_name = env_name or '_%s_COMPLETE' % prog_name.upper().replace('-', '_')
     extra_env = extra_env if extra_env else {}
-    env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))
+    env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)), autoescape=True)
     template = env.get_template('%s.j2' % shell.name)
     return template.render(prog_name=prog_name, complete_var=env_name, extra_env=extra_env)
 
