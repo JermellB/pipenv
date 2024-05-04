@@ -35,7 +35,7 @@ def _get(pypi_server):
     Query the PyPI RSS feed and return a list
     of XML items.
     """
-    response = requests.get(pypi_server)
+    response = requests.get(pypi_server, timeout=60)
     if response.status_code >= 300:
         raise HTTPError(status_code=response.status_code,
                         reason=response.reason)

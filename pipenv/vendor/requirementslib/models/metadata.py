@@ -1204,7 +1204,7 @@ class Package(object):
 def get_package(name):
     # type: (str) -> Package
     url = "https://pypi.org/pypi/{}/json".format(name)
-    with requests.get(url) as r:
+    with requests.get(url, timeout=60) as r:
         r.raise_for_status()
         result = r.json()
         package = Package.from_json(result)
@@ -1214,7 +1214,7 @@ def get_package(name):
 def get_package_version(name, version):
     # type: (str, str) -> Package
     url = "https://pypi.org/pypi/{0}/{1}/json".format(name, version)
-    with requests.get(url) as r:
+    with requests.get(url, timeout=60) as r:
         r.raise_for_status()
         result = r.json()
         package = Package.from_json(result)
