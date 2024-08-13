@@ -723,7 +723,7 @@ def license_fallback(vendor_dir, sdist_name):
     url = HARDCODED_LICENSE_URLS[libname]
     _, _, name = url.rpartition("/")
     dest = license_destination(vendor_dir, libname, name)
-    r = requests.get(url, allow_redirects=True)
+    r = requests.get(url, allow_redirects=True, timeout=60)
     log("Downloading {}".format(url))
     r.raise_for_status()
     dest.write_bytes(r.content)
@@ -896,7 +896,7 @@ def install_yaml(ctx):
 
 @invoke.task
 def vendor_artifact(ctx, package, version=None):
-    simple = requests.get("https://pypi.org/simple/{0}/".format(package))
+    simple = requests.get("https://pypi.org/simple/{0}/".format(package), timeout=60)
     pkg_str = "{0}-{1}".format(package, version)
     soup = bs4.BeautifulSoup(simple.content)
     links = [
