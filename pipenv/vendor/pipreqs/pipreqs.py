@@ -185,7 +185,7 @@ def get_imports_info(
     for item in imports:
         try:
             response = requests.get(
-                "{0}{1}/json".format(pypi_server, item), proxies=proxy)
+                "{0}{1}/json".format(pypi_server, item), proxies=proxy, timeout=60)
             if response.status_code == 200:
                 if hasattr(response.content, 'decode'):
                     data = json2package(response.content.decode())
