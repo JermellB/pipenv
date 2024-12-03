@@ -43,11 +43,11 @@ import codecs
 import ast
 import traceback
 from docopt import docopt
-import requests
 from yarg import json2package
 from yarg.exceptions import HTTPError
 
 from pipreqs import __version__
+from security import safe_requests
 
 REGEXP = [
     re.compile(r'^import (.+)$'),
@@ -184,7 +184,7 @@ def get_imports_info(
 
     for item in imports:
         try:
-            response = requests.get(
+            response = safe_requests.get(
                 "{0}{1}/json".format(pypi_server, item), proxies=proxy)
             if response.status_code == 200:
                 if hasattr(response.content, 'decode'):

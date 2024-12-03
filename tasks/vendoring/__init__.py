@@ -18,7 +18,6 @@ from pathlib import Path
 
 import bs4
 import invoke
-import requests
 
 from urllib3.util import parse_url as urllib3_parse
 
@@ -27,6 +26,7 @@ from pipenv.vendor.vistir.compat import NamedTemporaryFile, TemporaryDirectory
 from pipenv.vendor.vistir.contextmanagers import open_file
 from pipenv.vendor.requirementslib.models.lockfile import Lockfile, merge_items
 import pipenv.vendor.parse as parse
+from security import safe_requests
 
 
 TASK_NAME = "update"
@@ -723,7 +723,7 @@ def license_fallback(vendor_dir, sdist_name):
     url = HARDCODED_LICENSE_URLS[libname]
     _, _, name = url.rpartition("/")
     dest = license_destination(vendor_dir, libname, name)
-    r = requests.get(url, allow_redirects=True)
+    r = safe_requests.get(url, allow_redirects=True)
     log("Downloading {}".format(url))
     r.raise_for_status()
     dest.write_bytes(r.content)
@@ -896,7 +896,7 @@ def install_yaml(ctx):
 
 @invoke.task
 def vendor_artifact(ctx, package, version=None):
-    simple = requests.get("https://pypi.org/simple/{0}/".format(package))
+    simple = safe_requests.get("https://pypi.org/simple/{0}/".format(package))
     pkg_str = "{0}-{1}".format(package, version)
     soup = bs4.BeautifulSoup(simple.content)
     links = [
