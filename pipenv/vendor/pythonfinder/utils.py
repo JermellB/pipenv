@@ -17,6 +17,7 @@ from packaging.version import LegacyVersion, Version
 from .compat import Path, lru_cache, TimeoutError  # noqa
 from .environment import MYPY_RUNNING, PYENV_ROOT, SUBPROCESS_TIMEOUT
 from .exceptions import InvalidPythonVersion
+from security import safe_command
 
 six.add_move(
     six.MovedAttribute("Iterable", "collections", "collections.abc")
@@ -102,7 +103,7 @@ def get_python_version(path):
         "stderr": subprocess.PIPE,
         "shell": False,
     }
-    c = subprocess.Popen(version_cmd, **subprocess_kwargs)
+    c = safe_command.run(subprocess.Popen, version_cmd, **subprocess_kwargs)
     timer = Timer(SUBPROCESS_TIMEOUT, c.kill)
     try:
         out, _ = c.communicate()

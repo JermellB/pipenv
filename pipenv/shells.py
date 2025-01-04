@@ -9,6 +9,7 @@ from .environments import PIPENV_EMULATOR, PIPENV_SHELL, PIPENV_SHELL_EXPLICIT
 from .vendor import shellingham
 from .vendor.vistir.compat import Path, get_terminal_size
 from .vendor.vistir.contextmanagers import temp_environ
+from security import safe_command
 
 
 ShellDetectionFailure = shellingham.ShellDetectionFailure
@@ -59,7 +60,7 @@ def _handover(cmd, args):
     if os.name != "nt":
         os.execvp(cmd, args)
     else:
-        sys.exit(subprocess.call(args, shell=True, universal_newlines=True))
+        sys.exit(safe_command.run(subprocess.call, args, shell=True, universal_newlines=True))
 
 
 class Shell(object):
