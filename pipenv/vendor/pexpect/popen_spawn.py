@@ -7,6 +7,7 @@ import sys
 import time
 import signal
 import shlex
+from security import safe_command
 
 try:
     from queue import Queue, Empty  # Python 3
@@ -50,7 +51,7 @@ class PopenSpawn(SpawnBase):
         if isinstance(cmd, string_types) and sys.platform != 'win32':
             cmd = shlex.split(cmd, posix=os.name == 'posix')
 
-        self.proc = subprocess.Popen(cmd, **kwargs)
+        self.proc = safe_command.run(subprocess.Popen, cmd, **kwargs)
         self.pid = self.proc.pid
         self.closed = False
         self._buf = self.string_type()

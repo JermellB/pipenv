@@ -8,6 +8,8 @@ import errno
 
 from pipenv.vendor.pexpect.popen_spawn import PopenSpawn
 from pipenv.vendor import pexpect
+from security import safe_command
+
 pexpect.EOF.__module__ = "pexpect.exceptions"
 
 # Include `unicode` in STR_TYPES for Python 2.X
@@ -189,7 +191,7 @@ class Command(object):
                 popen_kwargs["cwd"] = cwd
             if env:
                 popen_kwargs["env"].update(env)
-            s = subprocess.Popen(self._popen_args, **popen_kwargs)
+            s = safe_command.run(subprocess.Popen, self._popen_args, **popen_kwargs)
         # Otherwise, use pexpect.
         else:
             pexpect_kwargs = self._default_pexpect_kwargs.copy()

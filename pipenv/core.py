@@ -39,6 +39,7 @@ from .utils import (
     parse_indexes, pep423_name, prepare_pip_source_args, proper_case,
     python_version, run_command, venv_resolve_deps
 )
+from security import safe_command
 
 
 if is_type_checking():
@@ -2449,19 +2450,19 @@ def _launch_windows_subprocess(script):
 
     # Command not found, maybe this is a shell built-in?
     if not command:
-        return subprocess.Popen(script.cmdify(), shell=True, **options)
+        return safe_command.run(subprocess.Popen, script.cmdify(), shell=True, **options)
 
     # Try to use CreateProcess directly if possible. Specifically catch
     # Windows error 193 "Command is not a valid Win32 application" to handle
     # a "command" that is non-executable. See pypa/pipenv#2727.
     try:
-        return subprocess.Popen([command] + script.args, **options)
+        return safe_command.run(subprocess.Popen, [command] + script.args, **options)
     except WindowsError as e:
         if e.winerror != 193:
             raise
 
     # Try shell mode to use Windows's file association for file launch.
-    return subprocess.Popen(script.cmdify(), shell=True, **options)
+    return safe_command.run(subprocess.Popen, script.cmdify(), shell=True, **options)
 
 
 def do_run_nt(script):
