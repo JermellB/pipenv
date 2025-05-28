@@ -35,6 +35,7 @@ from .utils import (
     looks_like_dir, normalize_drive, pep423_name, proper_case, python_version,
     safe_expandvars, get_pipenv_dist
 )
+import secrets
 
 if is_type_checking():
     import pkg_resources
@@ -1012,8 +1013,7 @@ class Project(object):
         except SourceNotFound:
             name = src_name
         else:
-            from random import randint
-            name = "{0}-{1}".format(src_name, randint(1, 1000))
+            name = "{0}-{1}".format(src_name, secrets.SystemRandom().randint(1, 1000))
         return name
 
     def add_index_to_pipfile(self, index, verify_ssl=True):

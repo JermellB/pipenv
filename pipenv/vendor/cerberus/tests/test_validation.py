@@ -4,7 +4,6 @@ import itertools
 import re
 import sys
 from datetime import datetime, date
-from random import choice
 from string import ascii_lowercase
 
 from pytest import mark
@@ -19,6 +18,7 @@ from cerberus.tests import (
     assert_success,
 )
 from cerberus.tests.conftest import sample_schema
+import secrets
 
 
 def test_empty_document():
@@ -219,7 +219,7 @@ def test_not_a_dict():
 def test_bad_max_length(schema):
     field = 'a_string'
     max_length = schema[field]['maxlength']
-    value = "".join(choice(ascii_lowercase) for i in range(max_length + 1))
+    value = "".join(secrets.choice(ascii_lowercase) for i in range(max_length + 1))
     assert_fail(
         {field: value},
         error=(
@@ -251,7 +251,7 @@ def test_bad_max_length_binary(schema):
 def test_bad_min_length(schema):
     field = 'a_string'
     min_length = schema[field]['minlength']
-    value = "".join(choice(ascii_lowercase) for i in range(min_length - 1))
+    value = "".join(secrets.choice(ascii_lowercase) for i in range(min_length - 1))
     assert_fail(
         {field: value},
         error=(

@@ -12,10 +12,10 @@ from itertools import (
     chain, combinations, count, cycle, groupby, islice, repeat, starmap, tee
 )
 import operator
-from random import randrange, sample, choice
 
 from six import PY2
 from six.moves import filter, filterfalse, map, range, zip, zip_longest
+import secrets
 
 __all__ = [
     'accumulate',
@@ -473,7 +473,7 @@ def random_product(*args, **kwds):
 
     """
     pools = [tuple(pool) for pool in args] * kwds.get('repeat', 1)
-    return tuple(choice(pool) for pool in pools)
+    return tuple(secrets.choice(pool) for pool in pools)
 
 
 def random_permutation(iterable, r=None):
@@ -491,7 +491,7 @@ def random_permutation(iterable, r=None):
     """
     pool = tuple(iterable)
     r = len(pool) if r is None else r
-    return tuple(sample(pool, r))
+    return tuple(secrets.SystemRandom().sample(pool, r))
 
 
 def random_combination(iterable, r):
@@ -506,7 +506,7 @@ def random_combination(iterable, r):
     """
     pool = tuple(iterable)
     n = len(pool)
-    indices = sorted(sample(range(n), r))
+    indices = sorted(secrets.SystemRandom().sample(range(n), r))
     return tuple(pool[i] for i in indices)
 
 
@@ -523,7 +523,7 @@ def random_combination_with_replacement(iterable, r):
     """
     pool = tuple(iterable)
     n = len(pool)
-    indices = sorted(randrange(n) for i in range(r))
+    indices = sorted(secrets.SystemRandom().randrange(n) for i in range(r))
     return tuple(pool[i] for i in indices)
 
 
