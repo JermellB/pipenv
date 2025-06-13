@@ -23,10 +23,10 @@
 # SOFTWARE.
 
 
-import requests
 
 from .exceptions import HTTPError
 from .package import json2package
+from security import safe_requests
 
 
 def get(package_name, pypi_server="https://pypi.python.org/pypi/"):
@@ -43,7 +43,7 @@ def get(package_name, pypi_server="https://pypi.python.org/pypi/"):
     """
     if not pypi_server.endswith("/"):
         pypi_server = pypi_server + "/"
-    response = requests.get("{0}{1}/json".format(pypi_server,
+    response = safe_requests.get("{0}{1}/json".format(pypi_server,
                                                  package_name))
     if response.status_code >= 300:
         raise HTTPError(status_code=response.status_code,

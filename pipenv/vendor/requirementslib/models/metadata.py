@@ -38,6 +38,8 @@ from .utils import filter_dict, get_pinned_version, is_pinned_requirement
 # fmt: off
 from six.moves import Sequence  # type: ignore  # isort:skip
 from six.moves import reduce  # type: ignore # isort:skip
+from security import safe_requests
+
 # fmt: on # isort:skip
 
 
@@ -1204,7 +1206,7 @@ class Package(object):
 def get_package(name):
     # type: (str) -> Package
     url = "https://pypi.org/pypi/{}/json".format(name)
-    with requests.get(url) as r:
+    with safe_requests.get(url) as r:
         r.raise_for_status()
         result = r.json()
         package = Package.from_json(result)
@@ -1214,7 +1216,7 @@ def get_package(name):
 def get_package_version(name, version):
     # type: (str, str) -> Package
     url = "https://pypi.org/pypi/{0}/{1}/json".format(name, version)
-    with requests.get(url) as r:
+    with safe_requests.get(url) as r:
         r.raise_for_status()
         result = r.json()
         package = Package.from_json(result)
