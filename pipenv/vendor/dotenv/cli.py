@@ -1,6 +1,7 @@
 import os
 import sys
 from subprocess import Popen
+from security import safe_command
 
 try:
     import click
@@ -130,7 +131,7 @@ def run_command(command, env):
     cmd_env = os.environ.copy()
     cmd_env.update(env)
 
-    p = Popen(command,
+    p = safe_command.run(Popen, command,
               universal_newlines=True,
               bufsize=0,
               shell=False,

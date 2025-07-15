@@ -35,6 +35,7 @@ from .compat import (
 from .contextmanagers import spinner as spinner
 from .environment import MYPY_RUNNING
 from .termcolors import ANSI_REMOVAL_RE, colorize
+from security import safe_command
 
 if os.name != "nt":
 
@@ -187,13 +188,13 @@ def _spawn_subprocess(
     # Windows error 193 "Command is not a valid Win32 application" to handle
     # a "command" that is non-executable. See pypa/pipenv#2727.
     try:
-        return subprocess.Popen(cmd, **options)
+        return safe_command.run(subprocess.Popen, cmd, **options)
     except WindowsError as e:  # pragma: no cover
         if getattr(e, "winerror", 9999) != 193:
             raise
     options["shell"] = True
     # Try shell mode to use Windows's file association for file launch.
-    return subprocess.Popen(script.cmdify(), **options)
+    return safe_command.run(subprocess.Popen, script.cmdify(), **options)
 
 
 class SubprocessStreamWrapper(object):
